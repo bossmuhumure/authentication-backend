@@ -1,17 +1,35 @@
 import Product from "../models/productModel.js";
+import cloudinary from "../dbconfig/claudinaryConfig.js";
+import upload from "../middleWare/fileUpload.js";
+import fs from "fs"
 export const createProduct = async (req, res) => {
     try {
         const {
             productName,
             productPrice,
             productDescription,
-            productCategory
+            productCategory,
+            productImage
         } = req.body;
+
+        if (!req.file) {
+            return res.status(400).json({ message: "No file uploaded" });
+
+            const uploadedImage = await cloudinary.uploader.upload(req.file.pat,
+                {
+                    folder: "uploads",
+                }
+            );
+            upload.deleteFile(req.file.path);
+            console.log("uploaded image:", uploadedImage);
+
+        }
         const newProduct = new Product({
             productName,
             productPrice,
             productDescription,
-            productCategory
+            productCategory,
+            productImage: uploadedImage.secure_url
         });
         const savedProduct = await newProduct.save();
         res.status(201).json({
