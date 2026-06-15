@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
         cb(null, uniqueName);
     },
 });
-const deleteFile = (filepath) => {
+const deleteFile = (filePath) => {
     if 
        (filePath && fs.existsSync(filePath)){
         fs.unlinkSync(filePath);
